@@ -2,7 +2,7 @@ import os
 
 DB_SERVER = os.environ.get('DB_SERVER')
 DB_PORT = int(os.environ.get('DB_PORT'))
-DATABASE_NAME = os.environ.get('DB_USERNAME')
+DATABASE_NAME = os.environ.get('DATABASE_NAME')
 DB_USERNAME = os.environ.get('DB_USERNAME')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
