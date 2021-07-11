@@ -15,5 +15,21 @@ echo  $MAIL_USE_TLS
 echo  $FLASK_APP
 
 ls -lrt
+
+if [ ! -f flaskblog/static/main.css ]
+then
+  echo 'Copying static files...' 
+  cp -r static/* flaskblog/static/
+fi
+
+mkdir -p /app/logs/
+touch /app/logs/gunicorn.log
+
 flask db upgrade
-gunicorn --bind 0.0.0.0:5000 run:app 
+
+gunicorn run:app \
+  --bind 0.0.0.0:5000 \
+  --workers 4 \
+  --log-file /app/logs/gunicorn.log \
+  --log-level DEBUG \
+  --reload

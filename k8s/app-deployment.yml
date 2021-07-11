@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      volumes:
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: app-pvc
+      containers:
+      - name: flaskapp
+        image: sujeetkp/pythonapp:1.0
+        resources:
+          limits:
+            memory: "500M"
+            cpu: "1"
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+          - name: app-data
+            mountPath: /app/flaskblog/static
+            subPath: appdata
+        env:
+          - name: DB_SERVER
+            value: db
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_USERNAME
+            value: postgres
+          - name: DATABASE_NAME
+            value: postgres
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secretdata
+                key: dbpassword
+          - name: EMAIL_USER
+            value: sujeetkumpadhi@gmail.com
+          - name: EMAIL_PASS
+            valueFrom:
+              secretKeyRef:
+                name: secretdata
+                key: emailpassword
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: secretdata
+                key: secretkey
+          - name: SQLALCHEMY_TRACK_MODIFICATIONS
+            value: "True"
+          - name: MAIL_SERVER
+            value: smtp.gmail.com
+          - name: MAIL_PORT
+            value: "587"
+          - name: MAIL_USE_TLS
+            value: "True"
+          - name: FLASK_APP
+            value: run.py
+
+                

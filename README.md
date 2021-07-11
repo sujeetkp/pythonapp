@@ -55,3 +55,7 @@ To generate URLs for static files, use the special 'static' endpoint name:
 
 url_for('static', filename='style.css')
 The file has to be stored on the filesystem as static/style.css.
+
+-----------------------------------------------------------
+
+kubectl create secret generic secretdata --from-literal secretkey=c580aba8fd78d73fe3bf804dbf433e95  --from-literal emailpassword=suj.cap-430002  --from-literal dbpassword=postgres
