@@ -1,0 +1,49 @@
+version: "3"
+services:
+    db:
+        container_name: pythonapp-postgres-db
+        image: postgres
+        environment: 
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        volumes: 
+            - postgres-data:/var/lib/postgresql/data
+        networks: 
+            - netapp
+    web:
+        container_name: pythonapp
+        image: sujeetkp/pythonapp:1.0
+        depends_on:
+            - db
+        environment: 
+            -  DB_SERVER=${DB_SERVER}
+            -  DB_PORT=${DB_PORT}
+            -  DB_USERNAME=${DB_USERNAME}
+            -  DATABASE_NAME=${DATABASE_NAME}
+            -  DB_PASSWORD=${DB_PASSWORD}
+            -  EMAIL_USER=${EMAIL_USER}
+            -  EMAIL_PASS=${EMAIL_PASS}
+            -  SECRET_KEY=${SECRET_KEY}
+            -  SQLALCHEMY_TRACK_MODIFICATIONS=${SQLALCHEMY_TRACK_MODIFICATIONS}
+            -  MAIL_SERVER=${MAIL_SERVER}
+            -  MAIL_PORT=${MAIL_PORT}
+            -  MAIL_USE_TLS=${MAIL_USE_TLS}
+            -  FLASK_APP=${FLASK_APP}
+        volumes: 
+            - appdata:/app/flaskblog/static
+        networks: 
+            - netapp
+    nginx:
+        container_name: pythonapp-nginx
+        image: sujeetkp/nginx:1.0
+        ports: 
+            - "80:80"
+        depends_on: 
+            - web
+        networks: 
+            - netapp
+networks: 
+    netapp:
+
+volumes: 
+    postgres-data:
+    appdata:
