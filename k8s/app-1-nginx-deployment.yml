@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: app-1-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: app-1-nginx
   template:
     metadata:
       labels:
-        app: nginx
+        app: app-1-nginx
     spec:
       containers:
-      - name: nginx
-        image: sujeetkp/nginx:2.0
+      - name: app-1-nginx
+        image: sujeetkp/app-1-nginx:1.0
         resources:
           limits:
-            memory: "500M"
-            cpu: "0.5"
+            memory: "128M"
+            cpu: "0.2"
         ports:
         - containerPort: 80

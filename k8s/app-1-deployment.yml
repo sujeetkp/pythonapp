@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: app-1
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: web
+      app: app-1
   template:
     metadata:
       labels:
-        app: web
+        app: app-1
     spec:
       volumes:
         - name: app-data
           persistentVolumeClaim:
-            claimName: app-pvc
+            claimName: app-1-pvc
       containers:
-      - name: flaskapp
+      - name: app-1
         image: sujeetkp/pythonapp:1.0
         resources:
           limits:
