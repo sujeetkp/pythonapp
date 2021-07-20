@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.inputs.nginxService.name }}
+spec:
+  type: {{ .Values.inputs.nginxService.type }}
+  selector: {{- include "blog-chart.nginxDeployLabels" . | indent 4 }}
+  ports:
+  - port: {{ .Values.inputs.nginxService.ports.port }}
+    targetPort: {{ .Values.inputs.nginxService.ports.targetPort }}

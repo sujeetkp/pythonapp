@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.inputs.dbDeploy.name }}
+spec:
+  replicas: {{ .Values.inputs.dbDeploy.replicaCount }}
+  selector:
+    matchLabels: {{- include "blog-chart.dbDeployLabels" . | indent 6 }}
+  template:
+    metadata:
+      labels: {{- include "blog-chart.dbAppLabels" . | indent 8 }}
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.inputs.dbDeploy.image }}
+        resources:
+          limits:
+            memory: {{ .Values.inputs.dbDeploy.limits.memory | quote }}
+            cpu: {{ .Values.inputs.dbDeploy.limits.cpu | quote }}
+        ports:
+        - containerPort: {{ .Values.inputs.dbDeploy.ports.containerPort }}
+        volumeMounts:
+          - name: {{ .Values.inputs.dbDeploy.volume.name }}
+            mountPath: {{ .Values.inputs.dbDeploy.volume.mountPath }}
+            subPath: {{ .Values.inputs.dbDeploy.volume.subPath }}
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secretdata
+                key: dbpassword
+      volumes:
+        - name: {{ .Values.inputs.dbDeploy.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.inputs.dbVolumeClaim.name }}

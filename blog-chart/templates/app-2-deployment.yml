@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.inputs.staticAppDeploy.name }}
+spec:
+  replicas: {{ .Values.inputs.staticAppDeploy.replicaCount }}
+  selector:
+    matchLabels: {{- include "blog-chart.staticAppDeployLabels" . | indent 6 }}
+  template:
+    metadata:
+      labels: {{- include "blog-chart.staticAppLabels" . | indent 8 }}
+    spec:
+      containers:
+      - name: htmlapp
+        image: {{ .Values.inputs.staticAppDeploy.image }}
+        resources:
+          limits:
+            memory: {{ .Values.inputs.staticAppDeploy.limits.memory | quote }}
+            cpu: {{ .Values.inputs.staticAppDeploy.limits.cpu | quote }}
+        ports:
+        - containerPort: {{ .Values.inputs.staticAppDeploy.ports.containerPort }}

@@ -1,0 +1,124 @@
+# Default values for blog-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+inputs:
+  blogDeploy:
+    name: app-1
+    replicaCount: 3
+    image: sujeetkp/pythonapp:1.0
+    limits:
+      memory: 500M
+      cpu: 1
+    ports:
+      containerPort: 5000
+    environment:
+      dbServer: db
+      dbPort: 5432
+      dbUsername: postgres
+      dbName: postgres
+      emailUsername: sujeetkumpadhi@gmail.com
+      mailServer: smtp.gmail.com
+      mailPort: 587
+      mailUseTLS: "True"
+      sqlalchemyTrack: "True"
+      flaskApp: run.py
+    secret:
+      name: secretdata
+      dbPassKey: dbpassword
+      emailPassKey: emailpassword
+      secretKey: secretkey
+    volume:
+      name: app-data
+      mountPath: /app/flaskblog/static
+      subPath: appdata
+    hpa:
+      name: app-1-hpa
+      minReplicas: 1
+      maxReplicas: 10
+      averageCPUUtilization: 50
+      averageMemoryUtilization: 80
+  nginxDeploy:
+    name: app-1-nginx
+    replicaCount: 1
+    image: sujeetkp/app-1-nginx:1.0
+    limits:
+      memory: 128M
+      cpu: 0.2
+    ports:
+      containerPort: 80
+  nginxService:
+    name: app-1-endpoint
+    type: ClusterIP
+    ports:
+      port: 5000
+      targetPort: 80
+  appVolumeClaim:
+    name: app-1-pvc
+    storage: 1G
+    volumeMode: Filesystem
+    accessModes: 
+      - ReadWriteMany
+  blogService:
+    name: app-1-svc
+    type: ClusterIP
+    ports:
+      port: 5000
+      targetPort: 5000
+  staticAppDeploy:
+    name: app-2
+    replicaCount: 2
+    image: sujeetkp/htmlapp:1.0
+    limits:
+      memory: 256M
+      cpu: 0.5
+    ports:
+      containerPort: 80
+  staticAppService:
+    name: app-2-endpoint
+    type: ClusterIP
+    ports:
+      port: 5001
+      targetPort: 80
+  dbVolumeClaim:
+    name: db-pvc
+    storage: 2G
+    volumeMode: Filesystem
+    accessModes: 
+      - ReadWriteMany
+  dbDeploy:
+    name: postgres
+    replicaCount: 1
+    image: postgres
+    limits:
+      memory: 128M
+      cpu: 0.5
+    ports:
+      containerPort: 5432
+    secret:
+      name: secretdata
+      dbPassKey: dbpassword
+    volume:
+      name: postgres-data
+      mountPath: /var/lib/postgresql/data
+      subPath: dbdata
+  dbService:
+    name: db
+    type: ClusterIP
+    ports:
+      port: 5432
+      targetPort: 5432
+  ingress:
+    name: ingress
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /$1
+    backends:
+      - pathType: Prefix
+        path: "/?(.*)"
+        serviceName: app-1-endpoint
+        servicePort: 5000
+      - pathType: Prefix
+        path: "/tribute/?(.*)"
+        serviceName: app-2-endpoint
+        servicePort: 5001

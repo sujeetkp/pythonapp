@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.inputs.nginxDeploy.name }}
+spec:
+  replicas: {{ .Values.inputs.nginxDeploy.replicaCount }}
+  selector:
+    matchLabels: 
+    {{- include "blog-chart.nginxDeployLabels" . | indent 6 }}
+  template:
+    metadata:
+      labels: {{- include "blog-chart.nginxAppLabels" . | indent 8 }}
+    spec:
+      containers:
+      - name: app-1-nginx
+        image: {{ .Values.inputs.nginxDeploy.image }}
+        resources:
+          limits:
+            memory: {{ .Values.inputs.nginxDeploy.limits.memory | quote }}
+            cpu: {{ .Values.inputs.nginxDeploy.limits.cpu | quote }}
+        ports:
+        - containerPort: {{ .Values.inputs.nginxDeploy.ports.containerPort }}

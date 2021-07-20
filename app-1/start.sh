@@ -25,7 +25,11 @@ fi
 mkdir -p /app/logs/
 touch /app/logs/gunicorn.log
 
+echo "Waiting for DB to be up and running ..."
+sleep 60
+
 flask db upgrade
+echo "DB is successfully configured !!"
 
 gunicorn run:app \
   --bind 0.0.0.0:5000 \
@@ -33,3 +37,5 @@ gunicorn run:app \
   --log-file /app/logs/gunicorn.log \
   --log-level DEBUG \
   --reload
+
+echo "Application started successfully !!"

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.inputs.staticAppService.name }}
+spec:
+  type: {{ .Values.inputs.staticAppService.type }}
+  selector: {{- include "blog-chart.staticAppDeployLabels" . | indent 4 }}
+  ports:
+  - port: {{ .Values.inputs.staticAppService.ports.port }}
+    targetPort: {{ .Values.inputs.staticAppService.ports.targetPort }}
