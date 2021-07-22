@@ -128,5 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
+# Dev Start up script
 start-k8s.ps1
+
+
+# Teraform files
+.terraform/

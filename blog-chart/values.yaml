@@ -5,11 +5,11 @@
 inputs:
   blogDeploy:
     name: app-1
-    replicaCount: 3
+    replicaCount: 2
     image: sujeetkp/pythonapp:1.0
     limits:
       memory: 500M
-      cpu: 1
+      cpu: 0.5
     ports:
       containerPort: 5000
     environment:
@@ -43,8 +43,8 @@ inputs:
     replicaCount: 1
     image: sujeetkp/app-1-nginx:1.0
     limits:
-      memory: 128M
-      cpu: 0.2
+      memory: 256M
+      cpu: 0.5
     ports:
       containerPort: 80
   nginxService:
@@ -58,7 +58,7 @@ inputs:
     storage: 1G
     volumeMode: Filesystem
     accessModes: 
-      - ReadWriteMany
+      - ReadWriteOnce
   blogService:
     name: app-1-svc
     type: ClusterIP
@@ -67,11 +67,11 @@ inputs:
       targetPort: 5000
   staticAppDeploy:
     name: app-2
-    replicaCount: 2
+    replicaCount: 1
     image: sujeetkp/htmlapp:1.0
     limits:
-      memory: 256M
-      cpu: 0.5
+      memory: 100M
+      cpu: 0.2
     ports:
       containerPort: 80
   staticAppService:
@@ -85,13 +85,13 @@ inputs:
     storage: 2G
     volumeMode: Filesystem
     accessModes: 
-      - ReadWriteMany
+      - ReadWriteOnce
   dbDeploy:
     name: postgres
     replicaCount: 1
     image: postgres
     limits:
-      memory: 128M
+      memory: 500M
       cpu: 0.5
     ports:
       containerPort: 5432
@@ -108,11 +108,20 @@ inputs:
     ports:
       port: 5432
       targetPort: 5432
+  clusterIssuer:
+    name: letsencrypt-prod
+    email: sujeetkupadhi@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    secretName: letsencrypt-production-private-key
   ingress:
-    name: ingress
+    name: ingress-service
+    secretName: app-summitailabs-xyz 
+    tlsHosts:
+      - app.summitailabs.xyz
     annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/rewrite-target: /$1
+      ingressClass: nginx                      
+      rewriteTarget: /$1         
+      sslRedirect: "True"        
     backends:
       - pathType: Prefix
         path: "/?(.*)"

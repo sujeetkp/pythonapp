@@ -11,6 +11,16 @@ spec:
     metadata:
       labels: {{- include "blog-chart.nginxAppLabels" . | indent 8 }}
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - app-1
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: app-1-nginx
         image: {{ .Values.inputs.nginxDeploy.image }}

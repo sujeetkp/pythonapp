@@ -12,6 +12,16 @@ spec:
       labels:
         app: app-2
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - app-1
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: htmlapp
         image: sujeetkp/htmlapp:1.0

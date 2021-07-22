@@ -1,3 +1,4 @@
+# Ignored in .helmignore file. This Ingress is used for non-tls
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
