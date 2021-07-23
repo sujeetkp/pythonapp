@@ -59,6 +59,8 @@ echo $ISSUER_HOSTPATH
 #######################################
 
 # Install Nginx Ingress
+# By default Nginx-Ingress creates a Classic Load Balancer.
+# You must override the annotation to create a NLB
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm install nginx-ingress ingress-nginx/ingress-nginx -f ./nginx-ingress-controller/values.yml
 
