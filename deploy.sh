@@ -1,4 +1,5 @@
 # Install Terraform
+$TERRAFORM_VERSION="1.0.0"
 tf_version=$TERRAFORM_VERSION
 wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
 unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
