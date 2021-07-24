@@ -1,9 +1,21 @@
+#AWS Credentials must be Present as Environmental Variables
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_DEFAULT_REGION="us-west-2"
+
+#jq and wget must be installed
+sudo yum install epel-release -y 
+sudo yum update -y
+sudo yum install -y jq
+sudo yum install -y wget
+sudo yum install -y unzip
+
 # Install Terraform
-$TERRAFORM_VERSION="1.0.0"
+TERRAFORM_VERSION="1.0.0"
 tf_version=$TERRAFORM_VERSION
-wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
-unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
-mv terraform /usr/local/bin/
+sudo wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+sudo unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+sudo mv terraform /usr/local/bin/
 terraform --version
 
 #######################################
@@ -18,19 +30,26 @@ aws --version
 
 # Install aws-iam-authenticator
 curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator
-mv aws-iam-authenticator /usr/local/bin/
-chmod +x /usr/local/bin/aws-iam-authenticator
+sudo mv aws-iam-authenticator /usr/local/bin/
+sudo chmod +x /usr/local/bin/aws-iam-authenticator
 aws-iam-authenticator version
 
 #######################################
 
 # Install Helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
+sudo chmod 700 get_helm.sh
+sudo ./get_helm.sh
 helm version
 
 sleep 5
+
+################################################
+
+# Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
 
 #######################################
 
@@ -47,6 +66,8 @@ sleep 5
 # Define Kubecofig Location
 export KUBECONFIG=./terraform-eks-cluster-deploy/kubeconfig/kubeconfig
 echo $KUBECONFIG
+
+kubectl get nodes
 
 #######################################
 
@@ -112,7 +133,6 @@ echo $POLICY_ARN
 #aws iam update-assume-role-policy --role-name $ROLE_NAME --policy-document file://cert-manager-config/assume-policy.json
 aws iam create-role --role-name $ROLE_NAME --assume-role-policy-document file://cert-manager-config/assume-policy.json
 ROLE_ARN=$(aws iam get-role --role-name $ROLE_NAME --query Role.Arn --output text)
-
 echo $ROLE_ARN
 
 # Attach Policy to Role
@@ -128,6 +148,8 @@ serviceAccount:
     eks.amazonaws.com/role-arn: $ROLE_ARN
 EOF
 
+cat ./cert-manager-config/custom-values.yml
+
 # Install cert-manager
 kubectl create namespace cert-manager
 helm repo add jetstack https://charts.jetstack.io
@@ -136,7 +158,7 @@ helm repo update
 helm template cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --set installCRDs=true \
-  -f $(PWD)/cert-manager-config/custom-values.yml | kubectl apply -f -
+  -f ${PWD}/cert-manager-config/custom-values.yml | kubectl apply -f -
 
 sleep 5
 
