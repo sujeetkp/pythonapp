@@ -1,14 +1,16 @@
 #!/bin/bash
 
-CLUSTER_NAME=""
-AWS_REGION="us-east-2"
+CLUSTER_NAME="dev-tech-eks-cluster"
+AWS_REGION="us-west-2"
 
-aws eks update-kubeconfig \
-  --region $AWS_REGION \
-  --name $CLUSTER_NAME
+CONTEXT=$(aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME)
+CONTEXT=$(echo $CONTEXT | awk '{print $3}')
+echo $CONTEXT
 
-export KUBECONFIG="~/.kube/config"
+export KUBECONFIG=~/.kube/config
 echo $KUBECONFIG
+
+kubectl config use-context $CONTEXT
 
 kubectl get nodes
 
