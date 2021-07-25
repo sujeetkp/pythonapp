@@ -32,7 +32,7 @@ pipeline {
 
         sh 'chmod +x deploy.sh'
         sh './deploy.sh'
-        
+
         echo "Deployment Successful."
       }
     }
