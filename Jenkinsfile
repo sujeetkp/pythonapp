@@ -7,20 +7,32 @@ pipeline {
   stages {
     stage("build") {
       steps {
-        echo "hello"
-        sh 'cat README.md'
+        echo "Build Successful."
       }
     }
 
     stage("test") {
       steps {
-        echo "hello"
+        echo "Test Successful."
       }
     }
 
-     stage("deploy") {
+    stage("deploy") {
+
+      environment{
+        AWS_ACCESS_KEY_ID=credentials('aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY=credentials('aws_secret_access_key')
+      }
+
       steps {
-        echo "hello"
+        echo "Deploying ..."
+        
+        sh 'echo ${AWS_ACCESS_KEY_ID}'
+        sh 'echo ${AWS_SECRET_ACCESS_KEY}'
+
+        sh 'chmod +x deploy.sh'
+        sh './deploy.sh'
+        echo "Deployment Successful."
       }
     }
 

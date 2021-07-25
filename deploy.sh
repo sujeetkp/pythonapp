@@ -1,6 +1,8 @@
+#!/bin/bash
+
 #AWS Credentials must be Present as Environmental Variables
-export AWS_ACCESS_KEY_ID=""
-export AWS_SECRET_ACCESS_KEY=""
+#export AWS_ACCESS_KEY_ID=""
+#export AWS_SECRET_ACCESS_KEY=""
 export AWS_DEFAULT_REGION="us-west-2"
 
 #jq and wget must be installed
