@@ -8,6 +8,7 @@ pipeline {
     stage("build") {
       steps {
         echo "hello"
+        sh 'cat README.md'
       }
     }
 
