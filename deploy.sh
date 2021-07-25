@@ -56,9 +56,9 @@ kubectl version --client
 #######################################
 
 # Deploy EKS Cluster
-terraform -chdir=terraform-eks-cluster-deploy init -input=false -backend-config=backend.conf -no-color
-terraform -chdir=terraform-eks-cluster-deploy validate -no-color
-terraform -chdir=terraform-eks-cluster-deploy plan -input=false -lock=false -var-file=config.tfvars -no-color
+terraform -chdir=terraform-eks-cluster-deploy init -input=false -backend-config=backend.conf
+terraform -chdir=terraform-eks-cluster-deploy validate
+terraform -chdir=terraform-eks-cluster-deploy plan -input=false -lock=false -var-file=config.tfvars
 exit
 terraform -chdir=terraform-eks-cluster-deploy apply -input=false -var-file=config.tfvars -auto-approve
 
