@@ -62,4 +62,4 @@ kubectl create secret generic secretdata --from-literal secretkey=c580aba8fd78d7
 
 -----------------------
 
-Test 123456
+Test 1234567
