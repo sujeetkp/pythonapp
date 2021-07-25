@@ -3,7 +3,9 @@ pipeline {
   agent{
     label 'linux'
   }
-
+  options {
+        ansiColor('xterm')
+  }
   stages {
     stage("build") {
       steps {

@@ -1,8 +1,10 @@
+#!/bin/bash
+
 # Uninstall helm charts:
-helm uninstall pythonapp
-helm uninstall external-dns
-helm uninstall cert-manager
-helm uninstall nginx-ingress
+#helm uninstall pythonapp
+#helm uninstall external-dns
+#helm uninstall cert-manager
+#helm uninstall nginx-ingress
 
 # Delete Policy and Roles
 ROLE_NAME="cert-manager"
