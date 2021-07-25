@@ -1,10 +1,22 @@
 #!/bin/bash
 
+CLUSTER_NAME=""
+AWS_REGION="us-east-2"
+
+aws eks update-kubeconfig \
+  --region $AWS_REGION \
+  --name $CLUSTER_NAME
+
+export KUBECONFIG="~/.kube/config"
+echo $KUBECONFIG
+
+kubectl get nodes
+
 # Uninstall helm charts:
-#helm uninstall pythonapp
-#helm uninstall external-dns
-#helm uninstall cert-manager
-#helm uninstall nginx-ingress
+helm uninstall pythonapp
+helm uninstall external-dns
+helm uninstall cert-manager
+helm uninstall nginx-ingress
 
 # Delete Policy and Roles
 ROLE_NAME="cert-manager"
