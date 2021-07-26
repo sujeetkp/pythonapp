@@ -115,9 +115,9 @@ inputs:
     secretName: letsencrypt-production-private-key
   ingress:
     name: ingress-service
-    secretName: app-summitailabs-xyz 
+    secretName: blog-summitailabs-xyz 
     tlsHosts:
-      - app.summitailabs.xyz
+      - blog.summitailabs.xyz
     annotations:
       ingressClass: nginx                      
       rewriteTarget: /$1         
