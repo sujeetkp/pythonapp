@@ -1,4 +1,4 @@
-flaskapp
+flaskapp:
 
 Postgres Database has to be created before hand.
 DB tables (User and Post) are not created automatically as part of this Application deployment.
